@@ -3,6 +3,7 @@ package com.example.sololearn.student;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 @Entity
 @Table
@@ -22,21 +23,28 @@ public class Student {
     private String name;
     private String email;
     private LocalDate dob;
+    @Transient
     private Integer age;
+    // transient means that this field will not be stored in the database. we are calculating the age based on the date of birth in the getter method
 
-    public Student(Long id, String name, String email, LocalDate dob, Integer age) {
+    // default constructor
+    public Student() {
+
+    }
+
+    // constructor with all fields
+    public Student(Long id, String name, String email, LocalDate dob) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.dob = dob;
-        this.age = age;
     }
 
-    public Student(String name, String email, LocalDate dob, Integer age) {
+    // constructor without id
+    public Student(String name, String email, LocalDate dob) {
         this.name = name;
         this.email = email;
         this.dob = dob;
-        this.age = age;
     }
 
     public Long getId() {
@@ -71,8 +79,9 @@ public class Student {
         this.dob = dob;
     }
 
+    // age is calculated based on the date of birth
     public Integer getAge() {
-        return age;
+        return Period.between(this.dob, LocalDate.now()).getYears();
     }
 
     public void setAge(Integer age) {
